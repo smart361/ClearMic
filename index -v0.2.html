@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Mic - AI音频降噪解决方案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4338CA',
+                        secondary: '#059669',
+                        accent: '#6366F1',
+                        dark: '#111827',
+                        light: '#F9FAFB',
+                        'gray-50': '#F9FAFB',
+                        'gray-100': '#F3F4F6',
+                        'gray-200': '#E5E7EB',
+                        'gray-300': '#D1D5DB',
+                        'gray-400': '#9CA3AF',
+                        'gray-500': '#6B7280',
+                        'gray-600': '#4B5563',
+                        'gray-700': '#374151',
+                        'gray-800': '#1F2937',
+                        'gray-900': '#111827',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+                    },
+                    fontSize: {
+                        'heading-1': 'clamp(2.5rem, 5vw, 4rem)',
+                        'heading-2': 'clamp(2rem, 4vw, 3rem)',
+                        'heading-3': 'clamp(1.5rem, 3vw, 2rem)',
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+                        'medium': '0 10px 30px rgba(0, 0, 0, 0.1)',
+                        'strong': '0 20px 60px rgba(0, 0, 0, 0.15)',
+                    },
+                    borderRadius: {
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                        '72': '18rem',
+                        '84': '21rem',
+                        '96': '24rem',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .text-shadow-lg {
+                text-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            }
+            .transition-smooth {
+                transition: all 0.3s ease-in-out;
+            }
+            .transition-transform {
+                transition: transform 0.3s ease-in-out;
+            }
+            .transition-opacity {
+                transition: opacity 0.3s ease-in-out;
+            }
+            .hover-lift {
+                transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            }
+            .hover-lift:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--tw-shadow-strong);
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, var(--tw-gradient-stops));
+            }
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .section-padding {
+                padding-top: clamp(4rem, 10vh, 6rem);
+                padding-bottom: clamp(4rem, 10vh, 6rem);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans bg-white text-dark">
+    <!-- 导航栏 -->
+    <header class="fixed top-0 left-0 right-0 glass-effect z-50 shadow-soft transition-all duration-300" id="navbar">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="streamlit-20250507232606-hehysby copy.png" alt="Clear Mic Logo" class="w-12 h-12 rounded-xl shadow-medium">
+                <span class="text-2xl font-bold text-dark font-display">Clear Mic</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-10">
+                <a href="#technology" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    技术
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#testimonials" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    用户评价
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#pricing" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    定价
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    联系我们
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+            </div>
+            <div class="flex items-center space-x-5">
+                <a href="#download" class="hidden md:block px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth font-medium">
+                    立即下载
+                </a>
+                <button class="md:hidden text-gray-700 hover:text-primary transition-smooth focus:outline-none" id="mobile-menu-button">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white shadow-medium absolute w-full left-0 top-full" id="mobile-menu">
+                <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                    <a href="#technology" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">技术</a>
+                    <a href="#testimonials" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">用户评价</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">定价</a>
+                    <a href="#contact" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">联系我们</a>
+                    <a href="#download" class="text-center px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl font-medium">
+                        立即下载
+                    </a>
+                </div>
+            </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="pt-32 pb-24 bg-gradient-to-br from-light to-white overflow-hidden relative">
+        <!-- 装饰元素 -->
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center relative z-10">
+            <div class="md:w-1/2 mb-12 md:mb-0 space-y-8">
+                <div class="space-y-6">
+                    <h1 class="text-heading-1 font-bold font-display text-shadow-lg leading-tight">
+                        AI音频降噪<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">专业解决方案</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 leading-relaxed max-w-lg">
+                        智能降噪，清晰通话。无论是线上会议、远程办公还是内容创作，Clear Mic都能为您提供专业级的音频体验，让每一次沟通都更加清晰高效。
+                    </p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="#download" class="px-8 py-4 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth text-center font-medium text-lg hover-lift">
+                        <i class="fa fa-download mr-2"></i>立即下载
+                    </a>
+                    <a href="#technology" class="px-8 py-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-smooth text-center font-medium text-lg shadow-soft hover-lift">
+                        <i class="fa fa-info-circle mr-2"></i>了解更多
+                    </a>
+                </div>
+                
+                <!-- 信任标识 -->
+                <div class="space-y-3">
+                    <p class="text-sm text-gray-500 uppercase tracking-wider font-medium">值得信赖的合作伙伴</p>
+                    <div class="flex flex-wrap items-center gap-8 opacity-70">
+                        <div class="text-gray-500 font-semibold">Microsoft</div>
+                        <div class="text-gray-500 font-semibold">Zoom</div>
+                        <div class="text-gray-500 font-semibold">Teams</div>
+                        <div class="text-gray-500 font-semibold">Google</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2">
+                <div class="relative">
+                    <div class="absolute -top-6 -left-6 right-6 bottom-6 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl blur-2xl"></div>
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20audio%20noise%20cancellation%20software%20interface%20with%20modern%20design%20showing%20before%20and%20after%20noise%20reduction&image_size=landscape_16_9" alt="Clear Mic音频降噪效果" class="relative z-10 rounded-2xl shadow-strong w-full hover-lift">
+                    <!-- 浮动元素 -->
+                    <div class="absolute -top-4 -right-4 bg-white rounded-xl shadow-medium p-4 w-40 animate-pulse">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fa fa-check text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold">降噪效果</p>
+                                <p class="text-xs text-gray-500">提升95%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品介绍板块 -->
+    <section id="about" class="section-padding bg-white relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute top-40 right-20 w-64 h-64 bg-primary/5 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-20 left-20 w-64 h-64 bg-secondary/5 rounded-full blur-2xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">为什么选择 Clear Mic？</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Clear Mic 是一款专业的音频降噪软件，为您提供清晰、纯净的音频体验，让您在任何环境中都能保持专业的沟通，提升工作效率。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 功能卡片 1 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-ban text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">智能降噪</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        先进的算法实时识别并消除背景噪音，让您的声音更加清晰可辨，即使在嘈杂环境中也能保持专业沟通。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 2 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-volume-up text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">自适应调节音量</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        智能感知环境噪音水平，自动调整音量大小，确保您的声音始终保持在最佳状态，无需手动干预。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 3 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-music text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">美声</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        智能美化您的声音，优化音色和语调，让您的声音更加悦耳动听，提升沟通的专业感和感染力。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 4 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-microphone-slash text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">变声</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        提供多种声音效果，满足不同场景的需求，为您的沟通增添趣味性和专业性，展现多样化的声音魅力。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术优势说明板块 -->
+    <section id="technology" class="section-padding bg-white relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute top-20 right-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">技术优势</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Clear Mic 采用先进的AI技术，为您提供卓越的音频降噪体验，让每一次沟通都更加清晰高效。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 技术优势卡片 1 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-bolt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">低延迟</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        优化的音频处理算法，确保实时降噪和变声效果，无卡顿或延迟，让您的沟通更加顺畅自然。
+                    </p>
+                </div>
+                
+                <!-- 技术优势卡片 2 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-feather text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">轻量级</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        高效的代码实现，占用系统资源少，即使在低配置设备上也能流畅运行，不会影响您的系统性能。
+                    </p>
+                </div>
+                
+                <!-- 技术优势卡片 3 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-refresh text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">实时音频处理</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        实时音频降噪和变声功能，能够在通话过程中实时处理音频，提供即时的清晰音频体验。
+                    </p>
+                </div>
+                
+                <!-- 技术优势卡片 4 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-shield text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">隐私保护</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        采用先进的隐私保护技术，包括端到端数据加密存储、传输加密、用户数据匿名化处理，确保您的个人信息安全。我们严格遵循数据最小化原则，仅收集必要信息，并提供详细的隐私政策告知机制。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 系统要求 -->
+    <section class="section-padding bg-light relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">系统要求</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    确保您的设备满足以下系统要求，以获得最佳的 Clear Mic 使用体验。
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl p-8 hover-lift shadow-medium">
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-desktop text-primary text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold font-display">支持的操作系统</h3>
+                            <p class="text-gray-600">Windows 10/11</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 降噪效果演示 -->
+    <section class="section-padding bg-light relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">降噪效果演示</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    体验 Clear Mic 强大的噪音消除能力，感受清晰音频的魅力，让您的沟通更加专业高效。
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-medium p-8 hover-lift">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 降噪前 -->
+                    <div class="text-center space-y-4">
+                        <h3 class="text-xl font-semibold font-display">降噪前</h3>
+                        <div class="w-full h-32 bg-gray-100 rounded-xl flex items-center justify-center shadow-soft">
+                            <button class="px-8 py-3 bg-gray-200 rounded-xl hover:bg-gray-300 transition-smooth font-medium">
+                                <i class="fa fa-play mr-2"></i>播放音频
+                            </button>
+                        </div>
+                        <p class="text-gray-600">包含背景噪音的原始音频</p>
+                    </div>
+                    
+                    <!-- 降噪后 -->
+                    <div class="text-center space-y-4">
+                        <h3 class="text-xl font-semibold font-display">降噪后</h3>
+                        <div class="w-full h-32 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center shadow-soft">
+                            <button class="px-8 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth font-medium">
+                                <i class="fa fa-play mr-2"></i>播放音频
+                            </button>
+                        </div>
+                        <p class="text-gray-600">Clear Mic 处理后的清晰音频</p>
+                    </div>
+                </div>
+                
+                <!-- 噪音类型选择 -->
+                <div class="mt-12 space-y-6">
+                    <h4 class="font-semibold text-lg font-display">尝试不同噪音类型</h4>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            多种噪音
+                        </button>
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            狗叫声
+                        </button>
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            婴儿哭声
+                        </button>
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            键盘声
+                        </button>
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            风扇噪音
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户评价板块 -->
+    <section id="testimonials" class="section-padding bg-white relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">用户评价</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    听听我们的用户如何评价 Clear Mic 的表现，了解它如何改变他们的工作和生活。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 用户评价卡片 1 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="flex items-center mb-6">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20businessman%20headshot%20with%20friendly%20smile&image_size=square" alt="用户头像" class="w-20 h-20 rounded-full object-cover mr-4 shadow-soft">
+                        <div>
+                            <h4 class="font-semibold text-lg font-display">李明</h4>
+                            <p class="text-gray-600">市场总监</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        "Clear Mic 彻底改变了我的远程工作体验，即使在家中有孩子和宠物，也能保持清晰的会议通话。它的噪音消除功能非常强大，让我能够专注于工作，而不是被背景噪音干扰。"
+                    </p>
+                </div>
+                
+                <!-- 用户评价卡片 2 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="flex items-center mb-6">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20businesswoman%20headshot%20with%20confident%20expression&image_size=square" alt="用户头像" class="w-20 h-20 rounded-full object-cover mr-4 shadow-soft">
+                        <div>
+                            <h4 class="font-semibold text-lg font-display">张华</h4>
+                            <p class="text-gray-600">内容创作者</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        "作为一名内容创作者，音频质量对我来说至关重要。Clear Mic 的降噪效果非常出色，让我的录音更加专业。而且它的美声功能也让我的声音更加悦耳动听，强烈推荐给所有需要高质量音频的人。"
+                    </p>
+                </div>
+                
+                <!-- 用户评价卡片 3 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="flex items-center mb-6">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20male%20teacher%20headshot%20with%20warm%20smile&image_size=square" alt="用户头像" class="w-20 h-20 rounded-full object-cover mr-4 shadow-soft">
+                        <div>
+                            <h4 class="font-semibold text-lg font-display">王老师</h4>
+                            <p class="text-gray-600">在线教育讲师</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        "作为一名在线教育讲师，我需要确保我的声音清晰可辨。Clear Mic 帮助我在不同的环境中都能保持专业的音频质量，学生们都说我的课程听起来更加清晰流畅。它的变声功能也让我的课程更加生动有趣。"
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 定价方案板块 -->
+    <section id="pricing" class="section-padding bg-light relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute top-20 right-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">定价方案</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    选择适合您的 Clear Mic 定价方案，享受专业级的音频降噪体验。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- 免费版 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="text-center mb-8">
+                        <h3 class="text-xl font-bold font-display mb-2">免费版</h3>
+                        <p class="text-gray-600 mb-4">适合个人用户</p>
+                        <div class="text-4xl font-bold text-primary font-display mb-2">¥0</div>
+                        <p class="text-gray-600">永久免费</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">基础降噪功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">自适应音量调节</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-times text-red-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-500">美声功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-times text-red-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-500">变声功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-times text-red-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-500">优先技术支持</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#download" class="block w-full py-4 bg-white border border-primary text-primary rounded-xl hover:bg-primary hover:text-white transition-smooth text-center font-medium hover-lift">
+                        免费下载
+                    </a>
+                </div>
+                
+                <!-- 专业版 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-medium border-2 border-primary relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary text-white text-sm font-medium px-4 py-1 rounded-full">
+                        最受欢迎
+                    </div>
+                    
+                    <div class="text-center mb-8">
+                        <h3 class="text-xl font-bold font-display mb-2">专业版</h3>
+                        <p class="text-gray-600 mb-4">适合专业用户</p>
+                        <div class="text-4xl font-bold text-primary font-display mb-2">¥99</div>
+                        <p class="text-gray-600">终身许可</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">高级降噪功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">自适应音量调节</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">美声功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">变声功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">优先技术支持</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#download" class="block w-full py-4 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth text-center font-medium hover-lift">
+                        立即购买
+                    </a>
+                </div>
+                
+                <!-- 企业版 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="text-center mb-8">
+                        <h3 class="text-xl font-bold font-display mb-2">企业版</h3>
+                        <p class="text-gray-600 mb-4">适合企业用户</p>
+                        <div class="text-4xl font-bold text-primary font-display mb-2">¥499</div>
+                        <p class="text-gray-600">每用户</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">高级降噪功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">自适应音量调节</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">美声功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">变声功能</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">企业级技术支持</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#contact" class="block w-full py-4 bg-white border border-primary text-primary rounded-xl hover:bg-primary hover:text-white transition-smooth text-center font-medium hover-lift">
+                        联系销售
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系/下载板块 -->
+    <section id="contact" class="section-padding bg-white relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">联系我们</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    如有任何问题或建议，欢迎随时联系我们，我们将竭诚为您服务。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <!-- 联系表单 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-xl font-semibold mb-6 font-display">发送消息</h3>
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-gray-700 font-medium mb-2">姓名 <span class="text-gray-400 text-sm">(可选)</span></label>
+                                <input type="text" id="name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-smooth">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-700 font-medium mb-2">邮箱 <span class="text-red-500">*</span></label>
+                                <input type="email" id="email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-smooth" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-gray-700 font-medium mb-2">主题 <span class="text-gray-400 text-sm">(可选)</span></label>
+                            <input type="text" id="subject" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-smooth">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 font-medium mb-2">消息 <span class="text-red-500">*</span></label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-smooth" required></textarea>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="privacy-consent" class="mt-1 w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary" required>
+                            <label for="privacy-consent" class="text-sm text-gray-600">
+                                我同意 Clear Mic 的 <a href="#" class="text-primary hover:underline">隐私政策</a>，并确认您可以根据隐私政策处理我的个人数据。 <span class="text-red-500">*</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth font-medium hover-lift">
+                            发送消息
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- 联系信息 -->
+                <div class="space-y-8">
+                    <!-- 联系信息卡片 -->
+                    <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                        <h3 class="text-xl font-semibold mb-6 font-display">联系信息</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-envelope text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">邮箱</h4>
+                                    <p class="text-gray-600">contact@clearmic.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-phone text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">电话</h4>
+                                    <p class="text-gray-600">+86 123 4567 8910</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-map-marker text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">地址</h4>
+                                    <p class="text-gray-600">北京市海淀区中关村科技园区</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 下载卡片 -->
+                    <div id="download" class="bg-gradient-to-br from-primary to-accent rounded-2xl p-8 hover-lift shadow-medium text-white">
+                        <h3 class="text-xl font-semibold mb-6 font-display">立即下载 Clear Mic</h3>
+                        <p class="text-white/90 mb-8">
+                            下载并安装 Clear Mic，享受专业级的音频降噪体验，让每一次沟通都更加清晰高效。
+                        </p>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="#" class="flex items-center justify-center space-x-3 px-6 py-3 bg-white text-primary rounded-xl hover:bg-gray-100 transition-smooth font-medium">
+                                <i class="fa fa-windows text-xl"></i>
+                                <span>Windows 版本</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white pt-20 pb-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- 公司信息 -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="streamlit-20250507232606-hehysby copy.png" alt="Clear Mic Logo" class="w-12 h-12 rounded-xl shadow-medium">
+                        <span class="text-2xl font-bold text-white font-display">Clear Mic</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Clear Mic 是一款专业的音频降噪软件，为您提供清晰、纯净的音频体验，让您在任何环境中都能保持专业的沟通。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">快速链接</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="#about" class="text-gray-400 hover:text-white transition-smooth">关于我们</a>
+                        </li>
+                        <li>
+                            <a href="#technology" class="text-gray-400 hover:text-white transition-smooth">技术优势</a>
+                        </li>
+                        <li>
+                            <a href="#testimonials" class="text-gray-400 hover:text-white transition-smooth">用户评价</a>
+                        </li>
+                        <li>
+                            <a href="#pricing" class="text-gray-400 hover:text-white transition-smooth">定价方案</a>
+                        </li>
+                        <li>
+                            <a href="#contact" class="text-gray-400 hover:text-white transition-smooth">联系我们</a>
+                        </li>
+                        <li>
+                            <a href="#download" class="text-gray-400 hover:text-white transition-smooth">立即下载</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 资源 -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">资源</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="#" class="text-gray-400 hover:text-white transition-smooth">帮助中心</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-400 hover:text-white transition-smooth">使用教程</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-400 hover:text-white transition-smooth">常见问题</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-400 hover:text-white transition-smooth">隐私政策</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-400 hover:text-white transition-smooth">服务条款</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 订阅 -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">订阅通讯</h4>
+                    <p class="text-gray-400 mb-6">
+                        订阅我们的通讯，获取最新的产品更新和优惠信息。
+                    </p>
+                    <form class="space-y-4">
+                        <div>
+                            <input type="email" placeholder="您的邮箱地址" class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-smooth text-white placeholder-gray-400" required>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="subscribe-consent" class="mt-1 w-5 h-5 rounded border-white/30 text-white focus:ring-white" required>
+                            <label for="subscribe-consent" class="text-sm text-gray-400">
+                                我同意 Clear Mic 根据 <a href="#" class="text-white hover:underline">隐私政策</a> 处理我的订阅数据。
+                            </label>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-white text-primary rounded-xl hover:bg-gray-100 transition-smooth font-medium">
+                            订阅
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">
+                    &copy; 2026 Clear Mic. 保留所有权利。
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-smooth">隐私政策</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-smooth">服务条款</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-smooth">Cookie 政策</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-medium');
+                navbar.classList.remove('shadow-soft');
+            } else {
+                navbar.classList.remove('shadow-medium');
+                navbar.classList.add('shadow-soft');
+            }
+        });
+
+        // 移动端菜单
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                // 关闭移动端菜单
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
