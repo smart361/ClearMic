@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - ClearMic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4338CA',
+                        secondary: '#059669',
+                        accent: '#6366F1',
+                        dark: '#111827',
+                        light: '#F9FAFB',
+                        'gray-50': '#F9FAFB',
+                        'gray-100': '#F3F4F6',
+                        'gray-200': '#E5E7EB',
+                        'gray-300': '#D1D5DB',
+                        'gray-400': '#9CA3AF',
+                        'gray-500': '#6B7280',
+                        'gray-600': '#4B5563',
+                        'gray-700': '#374151',
+                        'gray-800': '#1F2937',
+                        'gray-900': '#111827',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+                    },
+                    fontSize: {
+                        'heading-1': 'clamp(2.5rem, 5vw, 4rem)',
+                        'heading-2': 'clamp(2rem, 4vw, 3rem)',
+                        'heading-3': 'clamp(1.5rem, 3vw, 2rem)',
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+                        'medium': '0 10px 30px rgba(0, 0, 0, 0.1)',
+                        'strong': '0 20px 60px rgba(0, 0, 0, 0.15)',
+                    },
+                    borderRadius: {
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                        '72': '18rem',
+                        '84': '21rem',
+                        '96': '24rem',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .text-shadow-lg {
+                text-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            }
+            .transition-smooth {
+                transition: all 0.3s ease-in-out;
+            }
+            .transition-transform {
+                transition: transform 0.3s ease-in-out;
+            }
+            .transition-opacity {
+                transition: opacity 0.3s ease-in-out;
+            }
+            .hover-lift {
+                transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            }
+            .hover-lift:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--tw-shadow-strong);
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, var(--tw-gradient-stops));
+            }
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .section-padding {
+                padding-top: clamp(4rem, 10vh, 6rem);
+                padding-bottom: clamp(4rem, 10vh, 6rem);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans bg-white text-dark">
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 glass-effect z-50 shadow-soft transition-all duration-300" id="navbar">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="clearmic.png" alt="ClearMic Logo" class="w-12 h-12 rounded-xl shadow-medium">
+                <span class="text-2xl font-bold text-dark font-display">ClearMic</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-10">
+                <a href="index-en-v0.3.html#technology" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Product Highlights
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="index-en-v0.3.html#testimonials" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Testimonials
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="index-en-v0.3.html#pricing" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Pricing
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="faq.html" class="text-primary font-medium transition-smooth relative group">
+                    FAQ
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary transition-all duration-300"></span>
+                </a>
+                <a href="tutorials.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Tutorials
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="privacy.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Privacy
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="terms.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Terms
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="help.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Help
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="index-en-v0.3.html#contact" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Contact Us
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+            </div>
+            <div class="flex items-center space-x-5">
+                <a href="index-en-v0.3.html#download" class="hidden md:block px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth font-medium">
+                    Download Now
+                </a>
+                <button class="md:hidden text-gray-700 hover:text-primary transition-smooth focus:outline-none" id="mobile-menu-button">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-white shadow-medium absolute w-full left-0 top-full" id="mobile-menu">
+                <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                    <a href="index-en-v0.3.html#technology" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Product Highlights</a>
+                    <a href="index-en-v0.3.html#testimonials" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Testimonials</a>
+                    <a href="index-en-v0.3.html#pricing" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Pricing</a>
+                    <a href="faq.html" class="text-primary py-2 font-medium transition-smooth">FAQ</a>
+                    <a href="tutorials.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Tutorials</a>
+                    <a href="privacy.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Privacy</a>
+                    <a href="terms.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Terms</a>
+                    <a href="help.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Help</a>
+                    <a href="index-en-v0.3.html#contact" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Contact Us</a>
+                    <a href="index-en-v0.3.html#download" class="text-center px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl font-medium">
+                        Download Now
+                    </a>
+                </div>
+            </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-24 bg-gradient-to-br from-light to-white overflow-hidden relative">
+        <!-- Decorative Elements -->
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center space-y-6">
+                <h1 class="text-heading-1 font-bold font-display text-shadow-lg leading-tight">
+                    Frequently Asked Questions
+                </h1>
+                <p class="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                    Find answers to common questions about ClearMic's features, setup, and usage.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-padding bg-white relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 right-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl hidden md:block"></div>
+        <div class="absolute bottom-20 left-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl hidden md:block"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-4xl mx-auto space-y-6 md:space-y-8">
+                <!-- FAQ Item 1 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">What is ClearMic?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ClearMic is a professional audio noise cancellation software that provides clear, pure audio experience. It features four core algorithms: noise reduction, adaptive volume control, voice beautification, and voice transformation. With low latency, lightweight design, and real-time audio processing, ClearMic ensures professional communication in any environment.
+                    </p>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">What operating systems does ClearMic support?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ClearMic currently only supports Windows operating systems, specifically Windows 10 and Windows 11.
+                    </p>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">How do I set up the virtual microphone?</h3>
+                    <p class="text-gray-600 leading-relaxed mb-3 md:mb-4">
+                        To set up the virtual microphone in ClearMic, follow these steps:
+                    </p>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-600 leading-relaxed pl-4">
+                        <li>Install and launch ClearMic on your Windows computer.</li>
+                        <li>In the ClearMic interface, select your physical microphone as the input device.</li>
+                        <li>Enable the noise reduction or other audio processing features you need.</li>
+                        <li>In your meeting or recording software (e.g., Zoom, Teams, OBS), select "ClearMic Virtual Microphone" as the input device.</li>
+                        <li>Start your call or recording, and ClearMic will automatically process your audio in real-time.</li>
+                    </ol>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">What are the differences between Free and Professional versions?</h3>
+                    <p class="text-gray-600 leading-relaxed mb-3 md:mb-4">
+                        ClearMic offers two pricing plans:
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 leading-relaxed pl-4">
+                        <li><strong>Free Version:</strong> Includes basic noise reduction and adaptive volume control, with a 1-hour usage limit per session.</li>
+                        <li><strong>Professional Version:</strong> Includes all features (advanced noise reduction, adaptive volume control, voice beautification, voice transformation) with no usage limits, available for $48 per year.</li>
+                    </ul>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">Does ClearMic affect system performance?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        No, ClearMic is designed to be lightweight and efficient. It uses minimal system resources, ensuring smooth operation even on low-config devices without affecting your system performance. The optimized audio processing algorithms ensure real-time effects without lag or delay.
+                    </p>
+                </div>
+                
+                <!-- FAQ Item 6 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">How does ClearMic protect my privacy?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ClearMic takes user privacy very seriously. We implement comprehensive privacy protection measures, including end-to-end data encryption storage, transmission encryption, user data anonymization processing, and clear privacy policy notification mechanisms. We strictly follow the principle of data minimization, only collecting necessary information, and provide detailed privacy policy documents for users to review.
+                    </p>
+                </div>
+                
+                <!-- FAQ Item 7 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">How do I upgrade from Free to Professional version?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        To upgrade from the Free version to the Professional version, simply visit the Pricing page on our website and select the Professional plan. Follow the instructions to complete the payment process, and your ClearMic account will be automatically upgraded to the Professional version with all premium features unlocked.
+                    </p>
+                </div>
+                
+                <!-- FAQ Item 8 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">Can I use ClearMic with any application?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Yes, ClearMic works with most applications that use a microphone, including video conferencing software (Zoom, Microsoft Teams, Google Meet), voice recording software, streaming applications, and more. Simply select "ClearMic Virtual Microphone" as the input device in your application's audio settings.
+                    </p>
+                </div>
+                
+                <!-- FAQ Item 9 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">What is the refund policy?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ClearMic offers a 30-day money-back guarantee for the Professional version. If you're not satisfied with the product within 30 days of purchase, you can request a full refund. Please contact our customer support team with your order information to initiate the refund process.
+                    </p>
+                </div>
+                
+                <!-- FAQ Item 10 -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 font-display">How do I contact support?</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        You can contact ClearMic support through the Contact Us page on our website, or by sending an email to leospark069@gmail.com. Our support team typically responds within 24-48 hours during business days.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-20 pb-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Company Information -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="clearmic.png" alt="ClearMic Logo" class="w-12 h-12 rounded-xl shadow-medium">
+                        <span class="text-2xl font-bold text-white font-display">ClearMic</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        ClearMic is a professional audio noise cancellation software that provides clear, pure audio experience, allowing you to maintain professional communication in any environment.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="index-en-v0.3.html#about" class="text-gray-400 hover:text-white transition-smooth">About Us</a>
+                        </li>
+                        <li>
+                            <a href="index-en-v0.3.html#technology" class="text-gray-400 hover:text-white transition-smooth">Product Highlights</a>
+                        </li>
+                        <li>
+                            <a href="index-en-v0.3.html#testimonials" class="text-gray-400 hover:text-white transition-smooth">Testimonials</a>
+                        </li>
+                        <li>
+                            <a href="index-en-v0.3.html#pricing" class="text-gray-400 hover:text-white transition-smooth">Pricing Plans</a>
+                        </li>
+                        <li>
+                            <a href="index-en-v0.3.html#contact" class="text-gray-400 hover:text-white transition-smooth">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="index-en-v0.3.html#download" class="text-gray-400 hover:text-white transition-smooth">Download Now</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Resources</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="help.html" class="text-gray-400 hover:text-white transition-smooth">Help Center</a>
+                        </li>
+                        <li>
+                            <a href="tutorials.html" class="text-gray-400 hover:text-white transition-smooth">Usage Tutorials</a>
+                        </li>
+                        <li>
+                            <a href="faq.html" class="text-white hover:text-white transition-smooth">FAQ</a>
+                        </li>
+                        <li>
+                            <a href="privacy.html" class="text-gray-400 hover:text-white transition-smooth">Privacy Policy</a>
+                        </li>
+                        <li>
+                            <a href="terms.html" class="text-gray-400 hover:text-white transition-smooth">Terms of Service</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Subscribe -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Subscribe to Newsletter</h4>
+                    <p class="text-gray-400 mb-6">
+                        Subscribe to our newsletter to get the latest product updates and offers.
+                    </p>
+                    <form class="space-y-4">
+                        <div>
+                            <input type="email" placeholder="Your email address" class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-smooth text-white placeholder-gray-400" required>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="subscribe-consent" class="mt-1 w-5 h-5 rounded border-white/30 text-white focus:ring-white" required>
+                            <label for="subscribe-consent" class="text-sm text-gray-400">
+                                I agree to ClearMic processing my subscription data according to the <a href="privacy.html" class="text-white hover:underline">Privacy Policy</a>.
+                            </label>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-white text-primary rounded-xl hover:bg-gray-100 transition-smooth font-medium">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Copyright Information -->
+            <div class="border-t border-white/10 pt-10">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 mb-4 md:mb-0">© 2026 ClearMic. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="privacy.html" class="text-gray-400 hover:text-white transition-smooth">Privacy Policy</a>
+                        <a href="terms.html" class="text-gray-400 hover:text-white transition-smooth">Terms of Service</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-smooth">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-medium');
+                navbar.classList.remove('shadow-soft');
+            } else {
+                navbar.classList.remove('shadow-medium');
+                navbar.classList.add('shadow-soft');
+            }
+        });
+    </script>
+</body>
+</html>
