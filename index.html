@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClearMic - AI Audio Noise Cancellation Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4338CA',
+                        secondary: '#059669',
+                        accent: '#6366F1',
+                        dark: '#111827',
+                        light: '#F9FAFB',
+                        'gray-50': '#F9FAFB',
+                        'gray-100': '#F3F4F6',
+                        'gray-200': '#E5E7EB',
+                        'gray-300': '#D1D5DB',
+                        'gray-400': '#9CA3AF',
+                        'gray-500': '#6B7280',
+                        'gray-600': '#4B5563',
+                        'gray-700': '#374151',
+                        'gray-800': '#1F2937',
+                        'gray-900': '#111827',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+                    },
+                    fontSize: {
+                        'heading-1': 'clamp(2.5rem, 5vw, 4rem)',
+                        'heading-2': 'clamp(2rem, 4vw, 3rem)',
+                        'heading-3': 'clamp(1.5rem, 3vw, 2rem)',
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+                        'medium': '0 10px 30px rgba(0, 0, 0, 0.1)',
+                        'strong': '0 20px 60px rgba(0, 0, 0, 0.15)',
+                    },
+                    borderRadius: {
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                        '72': '18rem',
+                        '84': '21rem',
+                        '96': '24rem',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .text-shadow-lg {
+                text-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            }
+            .transition-smooth {
+                transition: all 0.3s ease-in-out;
+            }
+            .transition-transform {
+                transition: transform 0.3s ease-in-out;
+            }
+            .transition-opacity {
+                transition: opacity 0.3s ease-in-out;
+            }
+            .hover-lift {
+                transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            }
+            .hover-lift:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--tw-shadow-strong);
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, var(--tw-gradient-stops));
+            }
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .section-padding {
+                padding-top: clamp(4rem, 10vh, 6rem);
+                padding-bottom: clamp(4rem, 10vh, 6rem);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans bg-white text-dark">
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 glass-effect z-50 shadow-soft transition-all duration-300" id="navbar">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="clearmic.png" alt="ClearMic Logo" class="w-12 h-12 rounded-xl shadow-medium">
+                <span class="text-2xl font-bold text-dark font-display">ClearMic</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-10">
+                <a href="#technology" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Product Highlights
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#pricing" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Pricing
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#testimonials" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Testimonials
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="tutorials.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Tutorials
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="faq.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    FAQ
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="help.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Help
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="privacy.html" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Privacy
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="text-gray-700 hover:text-primary font-medium transition-smooth relative group">
+                    Contact Us
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+            </div>
+            <div class="flex items-center space-x-5">
+                <a href="#download" class="hidden md:block px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth font-medium">
+                    Download Now
+                </a>
+                <button class="md:hidden text-gray-700 hover:text-primary transition-smooth focus:outline-none" id="mobile-menu-button">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-white shadow-medium absolute w-full left-0 top-full" id="mobile-menu">
+                <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                    <a href="#technology" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Product Highlights</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Pricing</a>
+                    <a href="#testimonials" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Testimonials</a>
+                    <a href="tutorials.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Tutorials</a>
+                    <a href="faq.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">FAQ</a>
+                    <a href="help.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Help</a>
+                    <a href="privacy.html" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Privacy</a>
+                    <a href="#contact" class="text-gray-700 hover:text-primary py-2 font-medium transition-smooth">Contact Us</a>
+                    <a href="#download" class="text-center px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl font-medium">
+                        Download Now
+                    </a>
+                </div>
+            </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-24 bg-gradient-to-br from-light to-white overflow-hidden relative">
+        <!-- Decorative Elements -->
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center relative z-10">
+            <div class="md:w-1/2 mb-12 md:mb-0 space-y-8">
+                <div class="space-y-6">
+                    <h1 class="text-heading-1 font-bold font-display text-shadow-lg leading-tight">
+                        AI Audio Enhancement Suite<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Noise Cancellation & Voice Transformation</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 leading-relaxed max-w-lg">
+                        Intelligent audio solution beyond noise reduction. ClearMic provides professional audio experience with voice transformation, voice beautification, and adaptive volume control, perfect for online meetings, anonymous live streaming, anonymous socializing, and game streaming, making every communication clearer and more efficient.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="#download" class="px-8 py-4 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth text-center font-medium text-lg hover-lift">
+                        <i class="fa fa-download mr-2"></i>Download Now
+                    </a>
+                    <a href="#technology" class="px-8 py-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-smooth text-center font-medium text-lg shadow-soft hover-lift">
+                        <i class="fa fa-info-circle mr-2"></i>Learn More
+                    </a>
+                </div>
+                
+                <!-- Trusted Partners -->
+                <div class="space-y-3">
+                    <p class="text-sm text-gray-500 uppercase tracking-wider font-medium">Trusted Partners</p>
+                    <div class="flex flex-wrap items-center gap-8 opacity-70">
+                        <div class="text-gray-500 font-semibold">Microsoft</div>
+                        <div class="text-gray-500 font-semibold">Zoom</div>
+                        <div class="text-gray-500 font-semibold">Teams</div>
+                        <div class="text-gray-500 font-semibold">Google</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2">
+                <div class="relative">
+                    <div class="absolute -top-6 -left-6 right-6 bottom-6 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl blur-2xl"></div>
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20audio%20noise%20cancellation%20software%20interface%20with%20modern%20design%20showing%20before%20and%20after%20noise%20reduction&image_size=landscape_16_9" alt="ClearMic Noise Reduction Effect" class="relative z-10 rounded-2xl shadow-strong w-full hover-lift">
+                    <!-- Floating Element -->
+                    <div class="absolute -top-4 -right-4 bg-white rounded-xl shadow-medium p-4 w-40 animate-pulse">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fa fa-check text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold">Noise Reduction</p>
+                                <p class="text-xs text-gray-500">95% Improvement</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Introduction Section -->
+    <section id="about" class="section-padding bg-white relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-40 right-20 w-64 h-64 bg-primary/5 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-20 left-20 w-64 h-64 bg-secondary/5 rounded-full blur-2xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                    <h2 class="text-heading-2 font-bold font-display">Why Choose ClearMic?</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        ClearMic is a professional audio enhancement suite that provides clear, pure audio experience with advanced noise cancellation, voice transformation, voice beautification, and adaptive volume control, allowing you to maintain professional communication in any environment and improve work efficiency.
+                    </p>
+                </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature Card 1 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-ban text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Intelligent Noise Reduction</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Advanced algorithms real-time identify and eliminate background noise, making your voice clearer and more distinguishable, even in noisy environments.
+                    </p>
+                </div>
+                
+                <!-- Feature Card 2 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-volume-up text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Adaptive Volume Control</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Intelligently senses environmental noise levels and automatically adjusts volume to ensure your voice always stays at optimal level without manual intervention.
+                    </p>
+                </div>
+                
+                <!-- Feature Card 3 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-music text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Voice Beautification</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Intelligently beautifies your voice, optimizes tone and intonation, making your voice more pleasant and enhancing the professionalism and appeal of your communication.
+                    </p>
+                </div>
+                
+                <!-- Feature Card 4 -->
+                <div class="bg-white rounded-2xl p-8 text-center hover-lift shadow-soft border border-gray-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft">
+                        <i class="fa fa-microphone-slash text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Voice Transformation</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Provides multiple voice effects for anonymous communication, live streaming, and gaming, adding fun and versatility to your audio experience while protecting your privacy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Highlights Section -->
+    <section id="technology" class="section-padding bg-white relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 right-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">Product Highlights</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    ClearMic adopts advanced AI technology to provide you with excellent audio enhancement experience, including noise cancellation, voice transformation, voice beautification, and adaptive volume control, making every communication clearer and more efficient.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Product Highlight Card 1 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-bolt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Ultra Low Latency</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Optimized audio processing algorithms ensure real-time noise reduction and voice transformation effects without lag or delay, making your communication smoother and more natural.
+                    </p>
+                </div>
+                
+                <!-- Product Highlight Card 2 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-feather text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Lightweight & Efficient</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Efficient code implementation uses minimal system resources, ensuring smooth operation even on low-config devices without affecting your system performance.
+                    </p>
+                </div>
+                
+                <!-- Product Highlight Card 3 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-refresh text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Real-time Audio Processing</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Real-time audio noise reduction and voice transformation functions can process audio in real-time during calls, providing instant clear audio experience.
+                    </p>
+                </div>
+                
+                <!-- Product Highlight Card 4 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-shield text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Privacy Protection</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Adopts advanced privacy protection technologies, including end-to-end data encryption storage, transmission encryption, user data anonymization processing, to ensure your personal information security. We strictly follow the principle of data minimization, only collecting necessary information, and provide detailed privacy policy notification mechanism.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="section-padding bg-light relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">Use Cases</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    ClearMic is perfect for a variety of scenarios, enhancing your audio experience wherever you need it.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Online Meetings -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-video-camera text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Online Meetings</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Stay focused and professional in virtual meetings with crystal-clear audio, eliminating background noise and ensuring your voice is heard clearly.
+                    </p>
+                </div>
+                
+                <!-- Anonymous Live Streaming -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-eye-slash text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Anonymous Live Streaming</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Protect your privacy while streaming with voice transformation features, allowing you to maintain anonymity without compromising audio quality.
+                    </p>
+                </div>
+                
+                <!-- Anonymous Socializing -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-users text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Anonymous Socializing</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Engage in social platforms with confidence, using voice transformation to protect your identity while enjoying clear, enhanced audio.
+                    </p>
+                </div>
+                
+                <!-- Game Streaming -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 shadow-soft">
+                        <i class="fa fa-gamepad text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 font-display">Game Streaming</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Enhance your gaming streams with professional audio quality, noise reduction for clear commentary, and voice effects to entertain your audience.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Requirements -->
+    <section class="section-padding bg-light relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">System Requirements</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Ensure your device meets the following system requirements to get the best ClearMic usage experience.
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl p-8 hover-lift shadow-medium">
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-desktop text-primary text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold font-display">Supported Operating Systems</h3>
+                            <p class="text-gray-600">Windows 10/11</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Noise Reduction Demo -->
+    <section class="section-padding bg-white relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">Audio Enhancement Demo</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Experience ClearMic's powerful audio enhancement capabilities, from noise reduction to voice transformation.
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-medium p-8 hover-lift">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Before Enhancement -->
+                    <div class="text-center space-y-4">
+                        <h3 class="text-xl font-semibold font-display">Before Enhancement</h3>
+                        <div class="w-full h-32 bg-gray-100 rounded-xl flex items-center justify-center shadow-soft">
+                            <button class="px-8 py-3 bg-gray-200 rounded-xl hover:bg-gray-300 transition-smooth font-medium">
+                                <i class="fa fa-play mr-2"></i>Play Audio
+                            </button>
+                        </div>
+                        <p class="text-gray-600">Original audio with background noise</p>
+                    </div>
+                    
+                    <!-- After Enhancement -->
+                    <div class="text-center space-y-4">
+                        <h3 class="text-xl font-semibold font-display">After Enhancement</h3>
+                        <div class="w-full h-32 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center shadow-soft">
+                            <button class="px-8 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth font-medium">
+                                <i class="fa fa-play mr-2"></i>Play Audio
+                            </button>
+                        </div>
+                        <p class="text-gray-600">Enhanced audio with noise reduction and voice beautification</p>
+                    </div>
+                </div>
+                
+                <!-- Enhancement Type Selection -->
+                <div class="mt-12 space-y-6">
+                    <h4 class="font-semibold text-lg font-display">Try Different Enhancement Types</h4>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            Noise Reduction
+                        </button>
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            Voice Beautification
+                        </button>
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            Voice Transformation
+                        </button>
+                        <button class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:text-primary transition-smooth font-medium shadow-soft">
+                            Adaptive Volume
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section-padding bg-white relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">Testimonials</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Hear what our users have to say about ClearMic's performance and how it has changed their work and life.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial Card 1 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mr-4 shadow-soft">
+                            <i class="fa fa-user text-gray-400 text-3xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg font-display">John Smith</h4>
+                            <p class="text-gray-600">Marketing Director</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        "ClearMic has completely transformed my remote work experience. Even with kids and pets running around at home, I can maintain crystal-clear meeting calls. The noise cancellation is incredibly powerful, allowing me to focus on my work instead of getting distracted by background noise."
+                    </p>
+                </div>
+                
+                <!-- Testimonial Card 2 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mr-4 shadow-soft">
+                            <i class="fa fa-user text-gray-400 text-3xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg font-display">Sarah Johnson</h4>
+                            <p class="text-gray-600">Content Creator</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        "As a content creator, audio quality is everything to me. ClearMic's noise reduction is outstanding, making my recordings sound much more professional. The voice enhancement feature also gives my voice a polished, professional quality. I'd highly recommend it to anyone needing top-notch audio."
+                    </p>
+                </div>
+                
+                <!-- Testimonial Card 3 -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mr-4 shadow-soft">
+                            <i class="fa fa-user text-gray-400 text-3xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg font-display">David Wilson</h4>
+                            <p class="text-gray-600">Online Educator</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        "As an online educator, I need my voice to be clear and engaging. ClearMic helps me maintain professional audio quality no matter where I'm teaching from. My students consistently comment on how clear my lectures sound, and the voice effects add a fun element to my lessons that keeps students engaged."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Plans Section -->
+    <section id="pricing" class="section-padding bg-light relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 right-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">Pricing Plans</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Choose the ClearMic pricing plan that suits you and enjoy professional audio noise cancellation experience.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Free Version -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <div class="text-center mb-8">
+                        <h3 class="text-xl font-bold font-display mb-2">Free Version</h3>
+                        <p class="text-gray-600 mb-4">For personal users</p>
+                        <div class="text-4xl font-bold text-primary font-display mb-2">¥0</div>
+                        <p class="text-gray-600">1-hour limit</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">Basic noise reduction</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">Adaptive volume control</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-times text-red-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-500">Voice beautification</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-times text-red-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-500">Voice transformation</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-times text-red-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-500">Priority technical support</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#download" class="block w-full py-4 bg-white border border-primary text-primary rounded-xl hover:bg-primary hover:text-white transition-smooth text-center font-medium hover-lift">
+                        Free Download
+                    </a>
+                </div>
+                
+                <!-- Professional Version -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-medium border-2 border-primary relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary text-white text-sm font-medium px-4 py-1 rounded-full">
+                        Most Popular
+                    </div>
+                    
+                    <div class="text-center mb-8">
+                        <h3 class="text-xl font-bold font-display mb-2">Professional Version</h3>
+                        <p class="text-gray-600 mb-4">For professional users</p>
+                        <div class="text-4xl font-bold text-primary font-display mb-2">$48</div>
+                        <p class="text-gray-600">Per year</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">Advanced noise reduction</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">Adaptive volume control</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">Voice beautification</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">Voice transformation</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500 text-xs"></i>
+                            </div>
+                            <span class="text-gray-700">Priority technical support</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#download" class="block w-full py-4 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth text-center font-medium hover-lift">
+                        Buy Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact/Download Section -->
+    <section id="contact" class="section-padding bg-white relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 left-20 w-84 h-84 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-84 h-84 bg-secondary/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20 space-y-6">
+                <h2 class="text-heading-2 font-bold font-display">Contact Us</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    If you have any questions or suggestions, please feel free to contact us at any time, we will be happy to serve you.
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto space-y-8">
+                <!-- Contact Information Card -->
+                <div class="bg-white rounded-2xl p-8 hover-lift shadow-soft border border-gray-100">
+                    <h3 class="text-xl font-semibold mb-6 font-display">Contact Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-envelope text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Email</h4>
+                                    <p class="text-gray-600">leospark069@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-phone text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Phone</h4>
+                                    <p class="text-gray-600">Coming soon, please contact us via email</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-map-marker text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Address</h4>
+                                    <p class="text-gray-600">One Raffles Place, #25-01, Singapore 048616</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl p-6">
+                            <h4 class="font-semibold text-lg mb-4 font-display">Get in Touch</h4>
+                            <p class="text-gray-600 mb-6">
+                                If you have any questions or suggestions, please feel free to contact us at any time. We are committed to providing you with the best service and support.
+                            </p>
+                            <div class="flex space-x-4">
+                                <a href="mailto:leospark069@gmail.com" class="px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-medium transition-smooth font-medium hover-lift">
+                                    <i class="fa fa-paper-plane mr-2"></i>Email Us
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Download Card -->
+                <div id="download" class="bg-gradient-to-br from-primary to-accent rounded-2xl p-8 hover-lift shadow-medium text-white">
+                    <h3 class="text-xl font-semibold mb-6 font-display">Download ClearMic Now</h3>
+                    <p class="text-white/90 mb-8">
+                        Download and install ClearMic to enjoy professional audio enhancement experience with noise cancellation, voice transformation, voice beautification, and adaptive volume control, making every communication clearer and more efficient.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#" class="flex items-center justify-center space-x-3 px-6 py-3 bg-white text-primary rounded-xl hover:bg-gray-100 transition-smooth font-medium">
+                            <i class="fa fa-windows text-xl"></i>
+                            <span>Windows Version</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-20 pb-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Company Information -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="clearmic.png" alt="ClearMic Logo" class="w-12 h-12 rounded-xl shadow-medium">
+                        <span class="text-2xl font-bold text-white font-display">ClearMic</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        ClearMic is a professional audio noise cancellation software that provides clear, pure audio experience, allowing you to maintain professional communication in any environment.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6 font-display">Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="#about" class="text-gray-400 hover:text-white transition-smooth">About Us</a>
+                        </li>
+                        <li>
+                            <a href="#technology" class="text-gray-400 hover:text-white transition-smooth">Product Highlights</a>
+                        </li>
+                        <li>
+                            <a href="#pricing" class="text-gray-400 hover:text-white transition-smooth">Pricing</a>
+                        </li>
+                        <li>
+                            <a href="#testimonials" class="text-gray-400 hover:text-white transition-smooth">Testimonials</a>
+                        </li>
+                        <li>
+                            <a href="#contact" class="text-gray-400 hover:text-white transition-smooth">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6 font-display">Resources</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="tutorials.html" class="text-gray-400 hover:text-white transition-smooth">Tutorials</a>
+                        </li>
+                        <li>
+                            <a href="faq.html" class="text-gray-400 hover:text-white transition-smooth">FAQ</a>
+                        </li>
+                        <li>
+                            <a href="help.html" class="text-gray-400 hover:text-white transition-smooth">Help Center</a>
+                        </li>
+                        <li>
+                            <a href="privacy.html" class="text-gray-400 hover:text-white transition-smooth">Privacy Policy</a>
+                        </li>
+                        <li>
+                            <a href="terms.html" class="text-gray-400 hover:text-white transition-smooth">Terms of Service</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6 font-display">Contact</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-envelope text-gray-400 mt-1"></i>
+                            <span class="text-gray-400">leospark069@gmail.com</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-map-marker text-gray-400 mt-1"></i>
+                            <span class="text-gray-400">One Raffles Place, #25-01, Singapore 048616</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 mb-4 md:mb-0">
+                        &copy; 2024 ClearMic. All rights reserved.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="privacy.html" class="text-gray-400 hover:text-white transition-smooth">Privacy Policy</a>
+                        <a href="terms.html" class="text-gray-400 hover:text-white transition-smooth">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white', 'shadow-medium');
+                navbar.classList.remove('glass-effect');
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-medium');
+                navbar.classList.add('glass-effect');
+            }
+        });
+        
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
