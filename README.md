@@ -57,7 +57,7 @@ ClearMic is a professional audio noise cancellation software that provides clear
    - Adjust the noise reduction level using the slider if needed
 
 3. **Set Up Virtual Microphone**
-   - In your meeting or recording software (e.g., Zoom, Teams, OBS), select "ClearMic Virtual Microphone" as the input device
+   - In your meeting or recording software (e.g., Zoom, Teams, OBS), select "Streamlit Virtual Microphone" as the input device
 
 ### Advanced Features
 
